@@ -1,23 +1,65 @@
 from datetime import datetime, date, time
 import uuid
 
+
+PATH = "my_notes.txt"
+SEPARATOR = "|"
+
+
 def main():
     print("Проект 'Заметки'")
-    a = Note(uuid.uuid4(), datetime.now(), "bb")
-    b = Note(uuid.uuid4(), datetime.now(), "aa")
-    print(a)
-    print(b)
-    b.text ="gg"
-    print(b)
-    print(a.toLine())
+    n = Notes(PATH)
+    n.show()
+    a = Note()
+    a.id = "d3413dee-b227-4a73-ae30-64de38f31e10"
+    a.created = "03.24.2023, 22:29:09"
+    print("new note")
+    a.text = "new note 3"
+    n.add(a)
+    print("notes with new one")
+    n.show()
+    n.write(PATH)
+  
 
+class Notes:
+    # конструктор списка заметок
+    def __init__(self, path):
+        n = []
+        with open(path, 'r') as fp:
+            for line in fp:
+                n.append(Note.str2Note(line))
+        self._notes = n
+      
+    @property
+    def notes(self):
+        return self._notes
 
+    @notes.setter    
+    def notes(self, list_of_notes):
+        self._notes = list_of_notes
+    
+    def show(self):
+        # для вывода на экран
+        for n in self.notes:
+            print(n.toString())
+    
+    def add(self, n):
+        existed = self.notes
+        existed.append(n)
+        self.notes = existed
+    
+    def write(self, path):
+        f = open(path, "w")
+        [f.writelines(i.toLine()) for i in self.notes]
+        f.close()
+
+ 
 class Note:
     # конструктор заметки
-    def __init__(self, id, created, text):
-        self._id = id
-        self._created = created
-        self._text = text
+    def __init__(self):
+        self._id = 0
+        self._created = 0
+        self._text = ""
 
     @property
     def id(self):
@@ -45,11 +87,22 @@ class Note:
 
     def __str__(self):
         # для вывода на экран
-        return '({}: {})'.format(self.created, self.text)
-
+        return self.toString()
+    
+    def toString(self):
+        return '{}: {}'.format(self.created, self.text)
+    
     def toLine(self):
         # для вывода в файл
-        return "{}|{}|{}".format(self.id, self.created, self.text)
+        return "{}{}{}{}{}\n".format(self.id, SEPARATOR, self.created, SEPARATOR, self.text)
+    
+    def str2Note(sNote):
+        splitted = sNote.split(SEPARATOR)
+        new_note = Note()
+        new_note.id = splitted[0]
+        new_note.created = splitted[1]
+        new_note.text = splitted[2].rstrip()
+        return new_note
 
 
 if __name__ == '__main__':
