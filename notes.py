@@ -11,7 +11,7 @@ def main():
     print("Проект 'Заметки'")
     n = Notes(PATH)
     n.show()
-    add_note(n, "later", "so on and on")
+    UI.add_note(n, "first", "beginning")
     n.show()
     n.write(PATH)
     b = n.findID(uuid.UUID("78407295-2341-4a5c-8143-f63ee79d95ea"))
@@ -22,13 +22,33 @@ def main():
     # print(type(b.created))
     n.showAtDate("12.24.2023")
     n.write(PATH)
-  
-def add_note(notes, title, msg):
-    new_note = Note()
-    print(new_note.created)
-    new_note.title = title
-    new_note.msg = msg
-    notes.add(new_note)  
+    print("edit mode")
+    UI.edit_msg(n,"2113d13a-1a7a-4300-8af6-f9a35748d5fa", "edited")
+    n.write(PATH)
+    print("delete mode")
+    UI.delete_note(n, "713e9664-1f1a-4315-966d-d30c3242d4cf")
+    n.write(PATH)
+
+class UI():  
+    def add_note(notes, title, msg):
+        new_note = Note()
+        new_note.title = title
+        new_note.msg = msg
+        notes.add(new_note)
+
+    def edit_msg(notes, note_id: str, new_msg: str):
+        edited_note = notes.findID(uuid.UUID(note_id))
+        edited_note.msg = new_msg
+
+    def edit_title(notes, note_id: str, new_title: str):
+        edited_note = notes.findID(uuid.UUID(note_id))
+        edited_note.title = new_title
+
+    def delete_note(notes, note_id: str):
+        deleted_note = notes.findID(uuid.UUID(note_id))
+        if deleted_note in notes.notes:
+            notes._notes.remove(deleted_note)
+
 
 class Notes:
     # конструктор списка заметок
