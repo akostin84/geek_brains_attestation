@@ -9,25 +9,44 @@ SEPARATOR = ";"
 
 def main():
     print("Проект 'Заметки'")
-    n = Notes(PATH)
-    n.show()
-    UI.add_note(n, "first", "beginning")
-    n.show()
-    n.write(PATH)
-    b = n.findID(uuid.UUID("78407295-2341-4a5c-8143-f63ee79d95ea"))
-    print("found", b)
-    print("old text:", b.title)
-    b.title= "new gg"
-    print("new text:", b.title)
-    # print(type(b.created))
-    n.showAtDate("12.24.2023")
-    n.write(PATH)
-    print("edit mode")
-    UI.edit_msg(n,"2113d13a-1a7a-4300-8af6-f9a35748d5fa", "edited")
-    n.write(PATH)
-    print("delete mode")
-    UI.delete_note(n, "713e9664-1f1a-4315-966d-d30c3242d4cf")
-    n.write(PATH)
+    user_choise = -1
+    while user_choise != 0:
+        n = Notes(PATH)
+        user_choise = UI.read_from_console()
+        print("you selected:", user_choise)
+        if user_choise == 1:
+            n.show()
+        elif user_choise == 2:
+            print("Введите дату в формате ММ.ДД.ГГГГ")
+            day = input()
+            n.showAtDate(day)
+        elif user_choise == 3:
+            print("Введите идентификатор заметки")
+            id = input()
+            UI.delete_note(n, id)
+            n.write(PATH)
+
+
+
+    # n.show()
+    # UI.add_note(n, "first", "beginning")
+    # n.show()
+    # n.write(PATH)
+    # b = n.findID(uuid.UUID("78407295-2341-4a5c-8143-f63ee79d95ea"))
+    # print("found", b)
+    # print("old text:", b.title)
+    # b.title= "new gg"
+    # print("new text:", b.title)
+    # # print(type(b.created))
+    # n.showAtDate("12.24.2023")
+    # n.write(PATH)
+    # print("edit mode")
+    # UI.edit_msg(n,"2113d13a-1a7a-4300-8af6-f9a35748d5fa", "edited")
+    # n.write(PATH)
+    # print("delete mode")
+    # UI.delete_note(n, "713e9664-1f1a-4315-966d-d30c3242d4cf")
+    # n.write(PATH)
+
 
 class UI():  
     def add_note(notes, title, msg):
@@ -48,6 +67,27 @@ class UI():
         deleted_note = notes.findID(uuid.UUID(note_id))
         if deleted_note in notes.notes:
             notes._notes.remove(deleted_note)
+    
+    def read_from_console():
+        print("Выберите номер действия:")
+        print("1. Показать все заметки")
+        print("2. Показать заметки за выбранную дату")
+        print("3. Удалить заметку")
+        print("4. Изменить заголовок заметки")
+        print("5. Изменить текст заметки")
+        print("6. Добавить заметку")
+        print("0. Выйти")
+        message = input()
+        try:
+            selection = int(message)
+        except:
+            selection = 0
+            print("Ошибка ввода. Выход")
+        finally:
+            if selection not in range(7):
+                print("Ошибка ввода. Выход")
+                selection = 0
+        return selection
 
 
 class Notes:
