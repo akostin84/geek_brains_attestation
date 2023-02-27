@@ -1,4 +1,4 @@
-from datetime import datetime, date, time
+from datetime import datetime
 import uuid
 from os.path import exists
 
@@ -13,7 +13,6 @@ def main():
     while user_choise != 0:
         n = Notes(PATH)
         user_choise = UI.read_from_console()
-        print("you selected:", user_choise)
         if user_choise == 1:
             n.show()
         elif user_choise == 2:
@@ -25,27 +24,27 @@ def main():
             id = input()
             UI.delete_note(n, id)
             n.write(PATH)
-
-
-
-    # n.show()
-    # UI.add_note(n, "first", "beginning")
-    # n.show()
-    # n.write(PATH)
-    # b = n.findID(uuid.UUID("78407295-2341-4a5c-8143-f63ee79d95ea"))
-    # print("found", b)
-    # print("old text:", b.title)
-    # b.title= "new gg"
-    # print("new text:", b.title)
-    # # print(type(b.created))
-    # n.showAtDate("12.24.2023")
-    # n.write(PATH)
-    # print("edit mode")
-    # UI.edit_msg(n,"2113d13a-1a7a-4300-8af6-f9a35748d5fa", "edited")
-    # n.write(PATH)
-    # print("delete mode")
-    # UI.delete_note(n, "713e9664-1f1a-4315-966d-d30c3242d4cf")
-    # n.write(PATH)
+        elif user_choise == 4:
+            print("Введите идентификатор заметки")
+            id = input()
+            print("Введите новый заголовок заметки")
+            t = input()
+            UI.edit_title(n, id, t)
+            n.write(PATH)
+        elif user_choise == 5:
+            print("Введите идентификатор заметки")
+            id = input()
+            print("Введите новый текст заметки")
+            t = input()
+            UI.edit_msg(n, id, t)
+            n.write(PATH)
+        elif user_choise == 6:
+            print("Введите заголовок")
+            title = input()
+            print("Введите текст заметки")
+            text = input()
+            UI.add_note(n, title, text)
+            n.write(PATH)
 
 
 class UI():  
